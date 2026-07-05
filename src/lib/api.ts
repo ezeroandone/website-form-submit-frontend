@@ -13,14 +13,18 @@ export interface UserProfile {
 export interface WebsiteRecord {
   id: string;
   domain: string;
+  notify_email: string;
+  email_verified: number; // 0 | 1
   created_at: string;
 }
 
 export interface CreateWebsiteResult {
   website_id: string;
   domain: string;
+  notify_email: string;
+  email_verified: boolean;
   created_at: string;
-  api_key: string; // shown once
+  api_key: string;
 }
 
 /** Fetch with credentials so session cookie is sent */
@@ -48,14 +52,25 @@ export async function listWebsites(): Promise<WebsiteRecord[]> {
   return res.json();
 }
 
-export async function createWebsite(domain: string): Promise<CreateWebsiteResult> {
+export async function createWebsite(domain: string, notify_email: string): Promise<CreateWebsiteResult> {
   const res = await apiFetch("/api/websites", {
     method: "POST",
-    body: JSON.stringify({ domain }),
+    body: JSON.stringify({ domain, notify_email }),
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error ?? "Failed to create website");
   return data;
+}
+
+export async function resendVerification(websiteId: string): Promise<void> {
+  const res = await apiFetch("/api/websites/resend-verification", {
+    method: "POST",
+    body: JSON.stringify({ website_id: websiteId }),
+  });
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.error ?? "Failed to resend verification");
+  }
 }
 
 export async function deleteWebsite(id: string): Promise<void> {
