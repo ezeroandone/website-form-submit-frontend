@@ -13,6 +13,7 @@ export function Nav({ user }: NavProps) {
     <nav className="nav">
       <a href="/" className="nav-brand">FormSend</a>
       <div className="nav-links">
+        <a href="/docs" className="nav-link">Docs</a>
         <a href="/pricing">Pricing</a>
         {user ? (
           <>

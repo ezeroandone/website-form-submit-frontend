@@ -114,6 +114,7 @@ export default function PricingPage() {
         </a>
         <div className="nav-links">
           <a href="/" className="nav-link">Home</a>
+          <a href="/docs" className="nav-link">Docs</a>
           <a href="/dashboard" className="nav-link">Dashboard</a>
         </div>
       </nav>
@@ -259,6 +260,7 @@ export default function PricingPage() {
           </span>
           <div className="footer-links">
             <a href="/" className="footer-link">Home</a>
+            <a href="/docs" className="footer-link">Docs</a>
             <a href="/dashboard" className="footer-link">Dashboard</a>
             <a href="mailto:ezeroandone@gmail.com" className="footer-link">Contact</a>
           </div>

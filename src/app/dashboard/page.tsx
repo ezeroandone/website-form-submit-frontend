@@ -41,7 +41,7 @@ export default function DashboardPage() {
     async function load() {
       try {
         const profile = await getMe();
-        if (!profile) { window.location.href = "/?error=unauthenticated"; return; }
+        if (!profile) { window.location.href = GOOGLE_LOGIN_URL; return; }
         setUser(profile);
         const sites = await listWebsites();
         setWebsites(sites);

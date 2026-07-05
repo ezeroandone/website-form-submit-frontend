@@ -50,6 +50,25 @@ export default function LandingPage() {
 
   return (
     <>
+      {/* ── Structured data ── */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "FormSend",
+          "url": "https://formsend.ezeroandone.io",
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "Any",
+          "description": "Add a working contact form to any website in 60 seconds. No server, no hosting, no code required.",
+          "offers": [
+            { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free" },
+            { "@type": "Offer", "price": "1", "priceCurrency": "USD", "name": "Starter" },
+            { "@type": "Offer", "price": "5", "priceCurrency": "USD", "name": "Pro" },
+          ],
+        }) }}
+      />
+
       {/* ── Nav ── */}
       <nav className="nav">
         <a href="/" className="nav-brand">
@@ -59,6 +78,7 @@ export default function LandingPage() {
         <div className="nav-links">
           <a href="#features" className="nav-link">Features</a>
           <a href="#pricing" className="nav-link">Pricing</a>
+          <a href="/docs" className="nav-link">Docs</a>
           <a href={`${API}/auth/google`} className="btn-primary btn-sm" style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem" }}>
             <span className="material-icons-round" style={{ fontSize: "0.95rem" }}>login</span>
             Sign in
@@ -292,6 +312,7 @@ export default function LandingPage() {
           <div className="footer-links">
             <a href="#features" className="footer-link">Features</a>
             <a href="#pricing" className="footer-link">Pricing</a>
+            <a href="/docs" className="footer-link">Docs</a>
             <a href="/dashboard" className="footer-link">Dashboard</a>
             <a href="mailto:ezeroandone@gmail.com" className="footer-link">Contact</a>
           </div>
