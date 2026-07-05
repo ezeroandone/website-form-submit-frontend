@@ -14,19 +14,25 @@ export function Nav({ user }: NavProps) {
       <a href="/" className="nav-brand">FormSend</a>
       <div className="nav-links">
         <a href="/docs" className="nav-link">Docs</a>
-        <a href="/pricing">Pricing</a>
+        <a href="/pricing" className="nav-link">Pricing</a>
         {user ? (
           <>
-            <a href="/dashboard">Dashboard</a>
-            {user.is_admin && <a href="/admin">Admin</a>}
+            {/* divider */}
+            <span style={{ width: 1, height: 18, background: "var(--border)", display: "inline-block", margin: "0 0.25rem" }} aria-hidden="true" />
+            <a href="/dashboard" className="nav-link">Dashboard</a>
+            {user.is_admin && <a href="/admin" className="nav-link">Admin</a>}
             <form action={`${API}/auth/logout`} method="POST" style={{ display: "inline" }}>
               <button type="submit" className="btn-ghost btn-sm">Sign out</button>
             </form>
           </>
         ) : (
-          <a href={`${API}/auth/google`} className="btn-primary" style={{ padding: "0.4rem 1rem", borderRadius: 8, background: "#C5A059", color: "#000", fontWeight: 700, fontSize: "0.9rem" }}>
-            Sign in
-          </a>
+          <>
+            {/* divider */}
+            <span style={{ width: 1, height: 18, background: "var(--border)", display: "inline-block", margin: "0 0.25rem" }} aria-hidden="true" />
+            <a href={`${API}/auth/google`} className="btn-primary btn-sm">
+              Sign in
+            </a>
+          </>
         )}
       </div>
     </nav>
