@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Nav } from "@/components/Nav";
 
 const API_URL = "https://api.formsend.ezeroandone.io";
@@ -106,7 +107,47 @@ function SectionAnchor({ id, label, title }: { id: string; label: string; title:
 }
 
 
+const TOC = [
+  { href: "#overview",   label: "Overview"       },
+  { href: "#quickstart", label: "Quick start"    },
+  { href: "#endpoint",   label: "Endpoint"       },
+  { href: "#fields",     label: "Request fields" },
+  { href: "#responses",  label: "Responses"      },
+  { href: "#errors",     label: "Error reference"},
+  { href: "#examples",   label: "Code examples"  },
+  { href: "#domain",     label: "Domain setup"   },
+  { href: "#faq",        label: "FAQ"            },
+];
+
 export default function DocsPage() {
+  const [activeId, setActiveId] = useState("overview");
+
+  useEffect(() => {
+    const sectionIds = TOC.map(({ href }) => href.slice(1));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Pick the topmost entry that is intersecting
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible.length > 0) {
+          setActiveId(visible[0].target.id);
+        }
+      },
+      {
+        rootMargin: "-80px 0px -60% 0px", // offset for sticky nav + favour top of viewport
+        threshold: 0,
+      }
+    );
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
   return (
     <>
       <Nav user={null} />
@@ -117,23 +158,28 @@ export default function DocsPage() {
           <p style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", color: "var(--muted)", marginBottom: "0.5rem" }}>
             On this page
           </p>
-          {[
-            ["#overview",    "Overview"],
-            ["#quickstart",  "Quick start"],
-            ["#endpoint",    "Endpoint"],
-            ["#fields",      "Request fields"],
-            ["#responses",   "Responses"],
-            ["#errors",      "Error reference"],
-            ["#examples",    "Code examples"],
-            ["#domain",      "Domain setup"],
-            ["#faq",         "FAQ"],
-          ].map(([href, label]) => (
-            <a key={href} href={href} style={{ fontSize: "0.83rem", color: "var(--muted)", padding: "0.3rem 0.6rem", borderRadius: 6, textDecoration: "none", transition: "color 0.15s, background 0.15s" }}
-              onMouseEnter={e => { (e.target as HTMLElement).style.color = "var(--text)"; (e.target as HTMLElement).style.background = "var(--surface)"; }}
-              onMouseLeave={e => { (e.target as HTMLElement).style.color = "var(--muted)"; (e.target as HTMLElement).style.background = "transparent"; }}>
-              {label}
-            </a>
-          ))}
+          {TOC.map(({ href, label }) => {
+            const isActive = activeId === href.slice(1);
+            return (
+              <a
+                key={href}
+                href={href}
+                style={{
+                  fontSize: "0.83rem",
+                  color: isActive ? "var(--gold)" : "var(--muted)",
+                  padding: "0.3rem 0.6rem",
+                  borderRadius: 6,
+                  textDecoration: "none",
+                  transition: "color 0.15s, background 0.15s",
+                  background: isActive ? "var(--gold-light)" : "transparent",
+                  borderLeft: isActive ? "2px solid var(--gold)" : "2px solid transparent",
+                  fontWeight: isActive ? 600 : 400,
+                }}
+              >
+                {label}
+              </a>
+            );
+          })}
         </aside>
 
         {/* ── Main content ── */}
