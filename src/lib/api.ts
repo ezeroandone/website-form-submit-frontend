@@ -7,6 +7,7 @@ export interface UserProfile {
   is_admin: boolean;
   slot_count: number;
   website_count: number;
+  created_at: string;
 }
 
 export interface WebsiteRecord {
