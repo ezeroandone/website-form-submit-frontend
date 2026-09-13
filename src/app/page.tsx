@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GOOGLE_LOGIN_URL } from "@/lib/api";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "https://api.formsend.ezeroandone.io";
@@ -24,6 +24,20 @@ const features = [
 export default function LandingPage() {
   const heroRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Close drawer on Escape
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setMenuOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Lock body scroll when drawer open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
 
   // Subtle parallax on scroll
   useEffect(() => {
@@ -75,6 +89,7 @@ export default function LandingPage() {
           <span className="material-icons-round" style={{ fontSize: "1.1rem", verticalAlign: "middle", marginRight: "0.3rem" }}>send</span>
           FormSend
         </a>
+        {/* Desktop links */}
         <div className="nav-links">
           <a href="#features" className="nav-link">Features</a>
           <a href="#pricing" className="nav-link">Pricing</a>
@@ -84,6 +99,47 @@ export default function LandingPage() {
             Sign in
           </a>
         </div>
+        {/* Hamburger — mobile only */}
+        <button
+          className="nav-hamburger"
+          aria-label="Open navigation menu"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen(true)}
+        >
+          <span className="material-icons-round">menu</span>
+        </button>
+      </nav>
+
+      {/* Mobile drawer overlay */}
+      <div
+        className={`nav-drawer-overlay${menuOpen ? " open" : ""}`}
+        aria-hidden="true"
+        onClick={() => setMenuOpen(false)}
+      />
+
+      {/* Mobile drawer */}
+      <nav className={`nav-drawer${menuOpen ? " open" : ""}`} aria-label="Mobile navigation">
+        <div className="nav-drawer-header">
+          <span className="nav-brand">
+            <span className="material-icons-round" style={{ fontSize: "1rem", verticalAlign: "middle", marginRight: "0.25rem" }}>send</span>
+            FormSend
+          </span>
+          <button
+            className="nav-drawer-close"
+            aria-label="Close navigation menu"
+            onClick={() => setMenuOpen(false)}
+          >
+            <span className="material-icons-round">close</span>
+          </button>
+        </div>
+        <a href="#features" className="nav-link" onClick={() => setMenuOpen(false)}>Features</a>
+        <a href="#pricing" className="nav-link" onClick={() => setMenuOpen(false)}>Pricing</a>
+        <a href="/docs" className="nav-link" onClick={() => setMenuOpen(false)}>Docs</a>
+        <div className="nav-drawer-divider" />
+        <a href={`${API}/auth/google`} className="btn-primary btn-sm" onClick={() => setMenuOpen(false)}>
+          <span className="material-icons-round" style={{ fontSize: "0.95rem" }}>login</span>
+          Sign in
+        </a>
       </nav>
 
       {/* ── Hero ── */}

@@ -121,6 +121,7 @@ const TOC = [
 
 export default function DocsPage() {
   const [activeId, setActiveId] = useState("overview");
+  const [tocOpen, setTocOpen] = useState(false);
 
   useEffect(() => {
     const sectionIds = TOC.map(({ href }) => href.slice(1));
@@ -151,10 +152,94 @@ export default function DocsPage() {
   return (
     <>
       <Nav user={null} />
+
+      {/* ── Mobile TOC toggle ── */}
+      <div style={{
+        display: "none",
+        padding: "0.75rem 1.25rem",
+        borderBottom: "1px solid var(--border-subtle)",
+        position: "sticky",
+        top: 60,
+        zIndex: 100,
+        background: "rgba(8,8,8,0.92)",
+        backdropFilter: "blur(12px)",
+      }} className="docs-toc-bar">
+        <button
+          onClick={() => setTocOpen((v) => !v)}
+          style={{
+            background: "var(--surface)",
+            border: "1px solid var(--border)",
+            borderRadius: "var(--radius)",
+            color: "var(--text)",
+            fontSize: "0.85rem",
+            fontWeight: 600,
+            padding: "0.5rem 0.9rem",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.4rem",
+            width: "100%",
+          }}
+          aria-expanded={tocOpen}
+          aria-controls="docs-toc"
+        >
+          <span className="material-icons-round" style={{ fontSize: "1rem", color: "var(--gold)" }}>
+            {tocOpen ? "expand_less" : "toc"}
+          </span>
+          {tocOpen ? "Hide contents" : "On this page"}
+        </button>
+
+        {tocOpen && (
+          <div
+            id="docs-toc"
+            style={{
+              marginTop: "0.5rem",
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+              borderRadius: "var(--radius-lg)",
+              padding: "0.75rem",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.15rem",
+            }}
+          >
+            {TOC.map(({ href, label }) => {
+              const isActive = activeId === href.slice(1);
+              return (
+                <a
+                  key={href}
+                  href={href}
+                  onClick={() => setTocOpen(false)}
+                  style={{
+                    fontSize: "0.87rem",
+                    color: isActive ? "var(--gold)" : "var(--text-2)",
+                    padding: "0.45rem 0.7rem",
+                    borderRadius: 6,
+                    textDecoration: "none",
+                    background: isActive ? "var(--gold-light)" : "transparent",
+                    borderLeft: isActive ? "2px solid var(--gold)" : "2px solid transparent",
+                    fontWeight: isActive ? 600 : 400,
+                    minHeight: 40,
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  {label}
+                </a>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
       <div style={{ display: "flex", maxWidth: 1100, margin: "0 auto", padding: "2rem 1.5rem", gap: "3rem", alignItems: "flex-start" }}>
 
-        {/* ── Sidebar TOC ── */}
-        <aside style={{ width: 200, minWidth: 180, position: "sticky", top: 80, display: "flex", flexDirection: "column", gap: "0.25rem" }} aria-label="Table of contents">
+        {/* ── Sidebar TOC — desktop only ── */}
+        <aside
+          style={{ width: 200, minWidth: 180, position: "sticky", top: 80, display: "flex", flexDirection: "column", gap: "0.25rem" }}
+          aria-label="Table of contents"
+          className="docs-sidebar"
+        >
           <p style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", color: "var(--muted)", marginBottom: "0.5rem" }}>
             On this page
           </p>
@@ -312,7 +397,7 @@ export default function DocsPage() {
             <p style={{ color: "var(--text-2)", fontSize: "0.875rem", lineHeight: 1.7, marginBottom: "1.25rem" }}>
               Every response is JSON with a <code>success</code> boolean and a human-readable <code>message</code>.
             </p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1rem" }}>
               <div>
                 <p style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--success)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.5rem" }}>Success — 200</p>
                 <CodeBlock label="response.json" code={`{\n  "success": true,\n  "message": "Message sent successfully."\n}`} />

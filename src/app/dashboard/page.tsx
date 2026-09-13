@@ -173,7 +173,7 @@ export default function DashboardPage() {
                   style={{ flex: "1 1 220px" }}
                   required
                 />
-                <button type="submit" className="btn-primary" disabled={adding}>
+                <button type="submit" className="btn-primary add-website-btn" disabled={adding}>
                   {adding ? "Adding…" : "Add website"}
                 </button>
               </div>
