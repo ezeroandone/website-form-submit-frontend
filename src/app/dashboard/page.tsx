@@ -40,8 +40,35 @@ export default function DashboardPage() {
   useEffect(() => {
     async function load() {
       try {
+        // Check sessionStorage cache first to avoid a round-trip on every
+        // page navigation (cache is cleared when the tab closes)
+        const cached = sessionStorage.getItem("fs_user");
+        if (cached) {
+          const cachedUser: UserProfile = JSON.parse(cached);
+          setUser(cachedUser);
+          // Still fetch fresh data in the background to catch session expiry
+          getMe().then((profile) => {
+            if (!profile) {
+              sessionStorage.removeItem("fs_user");
+              window.location.href = GOOGLE_LOGIN_URL;
+            } else {
+              sessionStorage.setItem("fs_user", JSON.stringify(profile));
+              setUser(profile);
+            }
+          }).catch(() => {});
+          // Load websites in parallel
+          const sites = await listWebsites();
+          setWebsites(sites);
+          setLoading(false);
+          return;
+        }
+
         const profile = await getMe();
-        if (!profile) { window.location.href = GOOGLE_LOGIN_URL; return; }
+        if (!profile) {
+          window.location.href = GOOGLE_LOGIN_URL;
+          return;
+        }
+        sessionStorage.setItem("fs_user", JSON.stringify(profile));
         setUser(profile);
         const sites = await listWebsites();
         setWebsites(sites);

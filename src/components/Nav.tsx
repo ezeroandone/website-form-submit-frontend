@@ -39,7 +39,12 @@ export function Nav({ user }: NavProps) {
               <span style={{ width: 1, height: 18, background: "var(--border)", display: "inline-block", margin: "0 0.25rem" }} aria-hidden="true" />
               <a href="/dashboard" className="nav-link">Dashboard</a>
               {user.is_admin && <a href="/admin" className="nav-link">Admin</a>}
-              <form action={`${API}/auth/logout`} method="POST" style={{ display: "inline" }}>
+              <form
+                action={`${API}/auth/logout`}
+                method="POST"
+                style={{ display: "inline" }}
+                onSubmit={() => sessionStorage.removeItem("fs_user")}
+              >
                 <button type="submit" className="btn-ghost btn-sm">Sign out</button>
               </form>
             </>
@@ -93,7 +98,12 @@ export function Nav({ user }: NavProps) {
               <a href="/admin" className="nav-link" onClick={() => setOpen(false)}>Admin</a>
             )}
             <div className="nav-drawer-divider" />
-            <form action={`${API}/auth/logout`} method="POST" className="nav-drawer-sign-out-form">
+            <form
+              action={`${API}/auth/logout`}
+              method="POST"
+              className="nav-drawer-sign-out-form"
+              onSubmit={() => sessionStorage.removeItem("fs_user")}
+            >
               <button type="submit" className="btn-ghost btn-sm">Sign out</button>
             </form>
           </>

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { initiatePayment, GOOGLE_LOGIN_URL } from "@/lib/api";
+import { useEffect, useState } from "react";
+import { initiatePayment, getMe, GOOGLE_LOGIN_URL, UserProfile } from "@/lib/api";
+import { Nav } from "@/components/Nav";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "https://api.formsend.ezeroandone.io";
 
@@ -84,9 +85,15 @@ const faqs = [
 ];
 
 export default function PricingPage() {
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<number | null>(null);
   const [error, setError] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // Load user silently — used to show correct nav state and skip re-login
+  useEffect(() => {
+    getMe().then((profile) => setUser(profile ?? null)).catch(() => {});
+  }, []);
 
   async function handleBuy(amount: 1 | 5) {
     setError("");
@@ -97,6 +104,7 @@ export default function PricingPage() {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Payment failed";
       if (msg.toLowerCase().includes("unauthorized")) {
+        // Not logged in — send to Google login, then back to pricing
         window.location.href = `${API}/auth/google`;
       } else {
         setError(msg);
@@ -107,17 +115,7 @@ export default function PricingPage() {
 
   return (
     <>
-      <nav className="nav">
-        <a href="/" className="nav-brand">
-          <span className="material-icons-round" style={{ fontSize: "1.1rem", verticalAlign: "middle", marginRight: "0.3rem" }}>send</span>
-          FormSend
-        </a>
-        <div className="nav-links">
-          <a href="/" className="nav-link">Home</a>
-          <a href="/docs" className="nav-link">Docs</a>
-          <a href="/dashboard" className="nav-link">Dashboard</a>
-        </div>
-      </nav>
+      <Nav user={user} />
 
       <main style={{ maxWidth: 960, margin: "0 auto", padding: "4rem 1.5rem" }}>
 
@@ -179,11 +177,11 @@ export default function PricingPage() {
 
               {plan.price === 0 ? (
                 <a
-                  href={`${API}/auth/google`}
+                  href={user ? "/dashboard" : `${API}/auth/google`}
                   className="btn-ghost btn-lg"
                   style={{ textAlign: "center", display: "block" }}
                 >
-                  {plan.cta}
+                  {user ? "Go to dashboard" : plan.cta}
                 </a>
               ) : (
                 <button
