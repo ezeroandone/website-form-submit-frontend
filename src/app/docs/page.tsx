@@ -160,9 +160,8 @@ export default function DocsPage() {
         borderBottom: "1px solid var(--border-subtle)",
         position: "sticky",
         top: 60,
-        zIndex: 100,
-        background: "rgba(8,8,8,0.92)",
-        backdropFilter: "blur(12px)",
+        zIndex: 50,
+        background: "#0d0d0d",
       }} className="docs-toc-bar">
         <button
           onClick={() => setTocOpen((v) => !v)}
@@ -319,9 +318,9 @@ export default function DocsPage() {
               { n: 2, icon: "vpn_key",  title: "Copy your API key", body: <>After adding your website, the dashboard shows your API key once. Copy it immediately — it is only shown at creation (or after a key rotation).</> },
               { n: 3, icon: "code",     title: "Paste the form snippet", body: <>Add the HTML below to your page. Replace <code>YOUR_API_KEY</code> with your key and you are done.</> },
             ].map(step => (
-              <div key={step.n} style={{ display: "flex", gap: "1.25rem", marginBottom: "2rem", alignItems: "flex-start" }}>
+              <div key={step.n} style={{ display: "flex", gap: "1.25rem", marginBottom: "2rem", alignItems: "flex-start", minWidth: 0 }}>
                 <div style={{ width: 36, height: 36, minWidth: 36, borderRadius: "50%", background: "var(--gold-light)", border: "1px solid var(--gold-border)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, color: "var(--gold)", fontSize: "0.85rem" }}>{step.n}</div>
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: 1, minWidth: 0, overflow: "hidden" }}>
                   <div style={{ fontWeight: 700, fontSize: "0.95rem", marginBottom: "0.4rem", display: "flex", alignItems: "center", gap: "0.4rem" }}>
                     <span className="material-icons-round" style={{ fontSize: "1rem", color: "var(--gold)" }}>{step.icon}</span>
                     {step.title}

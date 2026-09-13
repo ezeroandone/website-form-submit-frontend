@@ -218,7 +218,7 @@ code { padding: 0.15rem 0.4rem; }
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.6);
-  z-index: 190;
+  z-index: 400;
   animation: fadeOverlay 0.2s ease;
 }
 @keyframes fadeOverlay {
@@ -237,7 +237,7 @@ code { padding: 0.15rem 0.4rem; }
   max-width: 80vw;
   background: var(--surface);
   border-left: 1px solid var(--border);
-  z-index: 300;
+  z-index: 500;
   display: flex;
   flex-direction: column;
   padding: 1.25rem 1rem;
@@ -626,7 +626,13 @@ tr:hover td { background: rgba(255,255,255,0.015); }
 
 /* ─── Docs page ───────────────────────────────────────────────────────────── */
 /* Mobile TOC bar hidden on desktop, shown on mobile via media query */
-.docs-toc-bar { display: none; }
+.docs-toc-bar {
+  display: none;
+  /* isolation: isolate prevents this stacking context from trapping
+     the nav drawer overlay which is position:fixed */
+  isolation: isolate;
+  z-index: 50;
+}
 
 /* ─── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
