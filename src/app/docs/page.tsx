@@ -339,7 +339,7 @@ export default function DocsPage() {
             <SectionAnchor id="endpoint" label="Endpoint" title="Submit endpoint" />
             <div className="card" style={{ display: "flex", gap: "1rem", alignItems: "center", flexWrap: "wrap", marginBottom: "1rem" }}>
               <span className="badge badge-gold" style={{ fontSize: "0.75rem", letterSpacing: "0.06em" }}>POST</span>
-              <code style={{ fontSize: "0.875rem", background: "transparent", border: "none", padding: 0 }}>{API_URL}/submit</code>
+              <code style={{ fontSize: "0.875rem", background: "transparent", border: "none", padding: 0, wordBreak: "break-all", minWidth: 0 }}>{API_URL}/submit</code>
             </div>
             <p style={{ color: "var(--text-2)", fontSize: "0.875rem", lineHeight: 1.7, marginBottom: "0.75rem" }}>
               Accepts <strong>JSON</strong> (<code>Content-Type: application/json</code>) or a standard HTML
